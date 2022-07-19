@@ -10,6 +10,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Color _currentColor = Colors.blue;
+  double _currentLightness = 1.0;
   final _controller = CircleColorPickerController(
     initialColor: Colors.blue,
   );
@@ -28,30 +29,27 @@ class _MyAppState extends State<MyApp> {
             const SizedBox(height: 48),
             Center(
               child: CircleColorPicker(
+                size: Size(180, 180),
+                strokeWidth: 12,
                 controller: _controller,
                 onChanged: (color) {
-                  setState(() => _currentColor = color);
+                  setState(() {});
                 },
+                onEnded: (color) {
+                  var c = HSLColor.fromAHSL(1.0, color.hue, 1.0, 0.5);
+                  setState(() {
+                    _currentColor = c.toColor();
+                    _currentLightness = color.lightness;
+                  });
+                },
+                centerWidget: InkWell(
+                  onTap: () {},
+                  borderRadius: BorderRadius.circular(180),
+                  child: Icon(Icons.offline_bolt_rounded, size: 50,),
+                )
               ),
             ),
-            const SizedBox(height: 48),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                  onPressed: () => _controller.color = Colors.blue,
-                  child: Text('BLUE', style: TextStyle(color: Colors.blue)),
-                ),
-                TextButton(
-                  onPressed: () => _controller.color = Colors.green,
-                  child: Text('GREEN', style: TextStyle(color: Colors.green)),
-                ),
-                TextButton(
-                  onPressed: () => _controller.color = Colors.red,
-                  child: Text('RED', style: TextStyle(color: Colors.red)),
-                ),
-              ],
-            ),
+            Text(_currentLightness.toString())
           ],
         ),
       ),

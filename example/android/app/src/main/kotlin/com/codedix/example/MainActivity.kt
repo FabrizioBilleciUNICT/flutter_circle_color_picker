@@ -1,4 +1,4 @@
-package team.itome.example
+package com.codedix.example
 
 import io.flutter.embedding.android.FlutterActivity
 
