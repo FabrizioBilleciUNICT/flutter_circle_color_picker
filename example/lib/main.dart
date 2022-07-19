@@ -27,8 +27,7 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 48),
-            Center(
-              child: CircleColorPicker(
+            Center(child: CircleColorPicker(
                 size: Size(180, 180),
                 strokeWidth: 12,
                 controller: _controller,
@@ -42,12 +41,19 @@ class _MyAppState extends State<MyApp> {
                     _currentLightness = color.lightness;
                   });
                 },
+                bound: (lightness) {
+                  if (lightness > 0.99) return 0.99;
+                  if (lightness < 0.01) return 0.01;
+                  return lightness;
+                },
+                lightnessMinIcon: Icon(Icons.lightbulb_outline_rounded, size: 20,),
+                lightnessMaxIcon: Icon(Icons.lightbulb_sharp, size: 20,),
                 centerWidget: InkWell(
                   onTap: () {},
                   borderRadius: BorderRadius.circular(180),
                   child: Icon(Icons.offline_bolt_rounded, size: 50,),
                 )
-              ),
+            ),
             ),
             Text(_currentLightness.toString())
           ],
