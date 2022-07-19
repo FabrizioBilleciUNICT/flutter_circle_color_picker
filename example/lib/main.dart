@@ -28,29 +28,14 @@ class _MyAppState extends State<MyApp> {
             const SizedBox(height: 48),
             Center(
               child: CircleColorPicker(
+                size: Size(180, 180),
+                strokeWidth: 12,
                 controller: _controller,
                 onChanged: (color) {
                   setState(() => _currentColor = color);
                 },
+                //centerWidget: ElevatedButton(child: Icon(Icons.on_device_training_outlined), onPressed: () {},),
               ),
-            ),
-            const SizedBox(height: 48),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                  onPressed: () => _controller.color = Colors.blue,
-                  child: Text('BLUE', style: TextStyle(color: Colors.blue)),
-                ),
-                TextButton(
-                  onPressed: () => _controller.color = Colors.green,
-                  child: Text('GREEN', style: TextStyle(color: Colors.green)),
-                ),
-                TextButton(
-                  onPressed: () => _controller.color = Colors.red,
-                  child: Text('RED', style: TextStyle(color: Colors.red)),
-                ),
-              ],
             ),
           ],
         ),

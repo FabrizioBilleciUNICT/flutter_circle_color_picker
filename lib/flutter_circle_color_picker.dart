@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 typedef ColorCodeBuilder = Widget Function(BuildContext context, Color color);
 
@@ -22,6 +21,7 @@ class CircleColorPickerController extends ChangeNotifier {
 class CircleColorPicker extends StatefulWidget {
   const CircleColorPicker({
     Key? key,
+    this.centerWidget,
     this.onChanged,
     this.onEnded,
     this.size = const Size(280, 280),
@@ -79,6 +79,9 @@ class CircleColorPicker extends StatefulWidget {
   /// Default is Text widget that shows rgb strings;
   final ColorCodeBuilder? colorCodeBuilder;
 
+  /// The widget displayed inside the circle
+  final Widget? centerWidget;
+
   Color get initialColor =>
       controller?.color ?? const Color.fromARGB(255, 255, 0, 0);
 
@@ -108,19 +111,31 @@ class _CircleColorPickerState extends State<CircleColorPicker>
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.size.width,
-      height: widget.size.height,
-      child: Stack(
+      height: widget.size.height + 100,
+      child: Column(
         children: <Widget>[
-          _HuePicker(
-            hue: _hueController.value,
-            size: widget.size,
-            strokeWidth: widget.strokeWidth,
-            thumbSize: widget.thumbSize,
-            onEnded: _onEnded,
-            onChanged: (hue) {
-              _hueController.value = hue;
-            },
+          Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              _HuePicker(
+                hue: _hueController.value,
+                size: widget.size,
+                strokeWidth: widget.strokeWidth,
+                thumbSize: widget.thumbSize,
+                onEnded: _onEnded,
+                onChanged: (hue) {
+                  _hueController.value = hue;
+                },
+              ),
+              Container(
+                height: widget.size.height - widget.strokeWidth * 6,
+                width: widget.size.width - widget.strokeWidth * 6,
+                decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(100)),
+                child: widget.centerWidget,
+              )
+            ],
           ),
+          const SizedBox(height: 20,),
           AnimatedBuilder(
             animation: _hueController,
             builder: (context, child) {
@@ -131,33 +146,9 @@ class _CircleColorPickerState extends State<CircleColorPicker>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        widget.colorCodeBuilder != null
-                            ? widget.colorCodeBuilder!(context, _color)
-                            : Text(
-                                '#${_color.value.toRadixString(16).substring(2)}',
-                                style: widget.textStyle,
-                              ),
-                        const SizedBox(height: 16),
-                        Container(
-                          width: 64,
-                          height: 64,
-                          decoration: BoxDecoration(
-                            color: _color,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 3,
-                              color: HSLColor.fromColor(_color)
-                                  .withLightness(
-                                    _lightnessController.value * 4 / 5,
-                                  )
-                                  .toColor(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
                         _LightnessSlider(
-                          width: 140,
-                          thumbSize: 26,
+                          width: widget.size.width,
+                          thumbSize: 20,
                           hue: _hueController.value,
                           lightness: _lightnessController.value,
                           onEnded: _onEnded,
@@ -270,7 +261,7 @@ class _LightnessSliderState extends State<_LightnessSlider>
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: 12,
+              height: 6,
               margin: EdgeInsets.symmetric(
                 horizontal: widget.thumbSize / 3,
               ),
@@ -279,9 +270,9 @@ class _LightnessSliderState extends State<_LightnessSlider>
                 gradient: LinearGradient(
                   stops: [0, 0.4, 1],
                   colors: [
-                    HSLColor.fromAHSL(1, widget.hue, 1, 0).toColor(),
-                    HSLColor.fromAHSL(1, widget.hue, 1, 0.5).toColor(),
-                    HSLColor.fromAHSL(1, widget.hue, 1, 0.9).toColor(),
+                    HSLColor.fromAHSL(1, widget.hue, 0, 0).toColor(),
+                    HSLColor.fromAHSL(1, widget.hue, 0, 0.5).toColor(),
+                    HSLColor.fromAHSL(1, widget.hue, 0, 0.9).toColor(),
                   ],
                 ),
               ),
@@ -296,7 +287,7 @@ class _LightnessSliderState extends State<_LightnessSlider>
                     1,
                     widget.hue,
                     1,
-                    widget.lightness,
+                    1,
                   ).toColor(),
                 ),
               ),
