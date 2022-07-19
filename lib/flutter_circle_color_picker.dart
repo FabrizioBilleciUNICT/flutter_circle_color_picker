@@ -166,6 +166,8 @@ class _CircleColorPickerState extends State<CircleColorPicker>
                           lightness: _lightnessController.value,
                           onEnded: _onEnded,
                           onChanged: (lightness) {
+                            if (lightness > 0.9) lightness = 0.9;
+                            else if (lightness < 0.1) lightness = 0.1;
                             _lightnessController.value = lightness;
                           },
                         ),
