@@ -41,7 +41,7 @@ class CircleColorPicker extends StatefulWidget {
   /// Called during a drag when the user is selecting a color.
   ///
   /// This callback called with latest color that user selected.
-  final ValueChanged<Color>? onChanged;
+  final ValueChanged<HSLColor>? onChanged;
 
   /// Called when drag ended.
   ///
@@ -206,8 +206,8 @@ class _CircleColorPickerState extends State<CircleColorPicker>
   }
 
   void _onColorChanged() {
-    widget.onChanged?.call(_color);
     widget.controller?.color = _color;
+    widget.onChanged?.call(HSLColor.fromColor(widget.controller!.color));
   }
 
   void _onEnded() {
