@@ -1,4 +1,4 @@
-# flutter_circle_color_picker_example
+# example
 
 Demonstrates how to use the flutter_circle_color_picker plugin.
 

@@ -1,7 +1,7 @@
 name: flutter_circle_color_picker
 description: A beatiful circle color picker which picks hsl color for flutter.
-version: 0.3.0
-homepage: https://github.com/itome/flutter_circle_color_picker
+version: 0.4.0
+homepage: https://github.com/FabrizioBilleciUNICT/flutter_circle_color_picker
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
