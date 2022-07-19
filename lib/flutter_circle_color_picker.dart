@@ -36,6 +36,9 @@ class CircleColorPicker extends StatefulWidget {
       color: Colors.black,
     ),
     this.colorCodeBuilder,
+    this.bound,
+    this.lightnessMinIcon,
+    this.lightnessMaxIcon,
   }) : super(key: key);
 
   /// Called during a drag when the user is selecting a color.
@@ -94,6 +97,15 @@ class CircleColorPicker extends StatefulWidget {
   /// Default value is 20.
   final double sliderThumbSize;
 
+  /// Set bound to lightness's value.
+  ///
+  /// E.g.: 0.1 < x < 0.9
+  final Function(double value)? bound;
+
+  /// Icons before and after the lightSlider.
+  final Icon? lightnessMinIcon;
+  final Icon? lightnessMaxIcon;
+
   Color get initialColor =>
       controller?.color ?? const Color.fromARGB(255, 255, 0, 0);
 
@@ -122,7 +134,10 @@ class _CircleColorPickerState extends State<CircleColorPicker>
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: widget.size.width,
+      width: widget.size.width +
+          (widget.lightnessMinIcon?.size ?? 0) +
+          (widget.lightnessMaxIcon?.size ?? 0) +
+          20,
       height: widget.size.height + 100,
       child: Column(
         children: <Widget>[
@@ -155,9 +170,13 @@ class _CircleColorPickerState extends State<CircleColorPicker>
                 animation: _lightnessController,
                 builder: (context, _) {
                   return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        if (widget.lightnessMinIcon != null)
+                          widget.lightnessMinIcon!,
                         _LightnessSlider(
                           width: widget.size.width,
                           thumbSize: widget.sliderThumbSize,
@@ -166,11 +185,12 @@ class _CircleColorPickerState extends State<CircleColorPicker>
                           lightness: _lightnessController.value,
                           onEnded: _onEnded,
                           onChanged: (lightness) {
-                            if (lightness > 0.9) lightness = 0.9;
-                            else if (lightness < 0.1) lightness = 0.1;
+                            if (widget.bound != null) lightness = widget.bound!(lightness);
                             _lightnessController.value = lightness;
                           },
                         ),
+                        if (widget.lightnessMaxIcon != null)
+                          widget.lightnessMaxIcon!,
                       ],
                     ),
                   );
