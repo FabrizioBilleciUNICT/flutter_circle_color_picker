@@ -27,6 +27,8 @@ class CircleColorPicker extends StatefulWidget {
     this.size = const Size(280, 280),
     this.strokeWidth = 2,
     this.thumbSize = 32,
+    this.sliderThumbSize = 20,
+    this.sliderHeight = 6,
     this.controller,
     this.textStyle = const TextStyle(
       fontSize: 24,
@@ -81,6 +83,16 @@ class CircleColorPicker extends StatefulWidget {
 
   /// The widget displayed inside the circle
   final Widget? centerWidget;
+
+  /// The width of slider border.
+  ///
+  /// Default value is 6.
+  final double sliderHeight;
+
+  /// The size of thumb for circle picker.
+  ///
+  /// Default value is 20.
+  final double sliderThumbSize;
 
   Color get initialColor =>
       controller?.color ?? const Color.fromARGB(255, 255, 0, 0);
@@ -148,7 +160,8 @@ class _CircleColorPickerState extends State<CircleColorPicker>
                       children: <Widget>[
                         _LightnessSlider(
                           width: widget.size.width,
-                          thumbSize: 20,
+                          thumbSize: widget.sliderThumbSize,
+                          sliderHeight: widget.sliderHeight,
                           hue: _hueController.value,
                           lightness: _lightnessController.value,
                           onEnded: _onEnded,
@@ -219,6 +232,7 @@ class _LightnessSlider extends StatefulWidget {
     required this.onChanged,
     required this.onEnded,
     required this.thumbSize,
+    required this.sliderHeight,
   }) : super(key: key);
 
   final double hue;
@@ -232,6 +246,8 @@ class _LightnessSlider extends StatefulWidget {
   final VoidCallback onEnded;
 
   final double thumbSize;
+
+  final double sliderHeight;
 
   @override
   _LightnessSliderState createState() => _LightnessSliderState();
@@ -261,12 +277,12 @@ class _LightnessSliderState extends State<_LightnessSlider>
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: 6,
+              height: widget.sliderHeight,
               margin: EdgeInsets.symmetric(
                 horizontal: widget.thumbSize / 3,
               ),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(6)),
+                borderRadius: BorderRadius.all(Radius.circular(widget.sliderHeight)),
                 gradient: LinearGradient(
                   stops: [0, 0.4, 1],
                   colors: [
