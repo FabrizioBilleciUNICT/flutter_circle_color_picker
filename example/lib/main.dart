@@ -33,6 +33,9 @@ class _MyAppState extends State<MyApp> {
                 strokeWidth: 12,
                 controller: _controller,
                 onChanged: (color) {
+                  setState(() {});
+                },
+                onEnded: (color) {
                   var c = HSLColor.fromAHSL(1.0, color.hue, 1.0, 0.5);
                   setState(() {
                     _currentColor = c.toColor();
